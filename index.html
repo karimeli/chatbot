@@ -1,12 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chatbot</title>
-    <script src="/css/style.css"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot Section</title>
+
+  <!-- Link to External CSS -->
+  <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-    
+
+  <!-- Chatbot Container -->
+  <div class="chatbox-container">
+    <!-- Header -->
+    <div class="chatbox-header">
+      Chatbot
+    </div>
+
+    <!-- Chatbody (messages) -->
+    <div class="chatbox-body" id="chatbox-body">
+      <div class="message bot">
+        <p>Hello! How can I assist you today?</p>
+      </div>
+    </div>
+
+    <!-- Chatbox Footer (Input Area) -->
+    <div class="chatbox-footer">
+      <input type="text" id="chat-input" class="chat-input" placeholder="Type your message..." />
+      <button id="send-btn" class="send-btn">Send</button>
+    </div>
+  </div>
+
+  <!-- Chatbot functionality (Simple JavaScript) -->
+  <script>
+    document.getElementById('send-btn').addEventListener('click', function() {
+      const userMessage = document.getElementById('chat-input').value;
+      if (userMessage.trim() === '') return;
+
+      // Display user message
+      const userMessageElement = document.createElement('div');
+      userMessageElement.classList.add('message', 'user');
+      userMessageElement.innerHTML = `<p>${userMessage}</p>`;
+      document.getElementById('chatbox-body').appendChild(userMessageElement);
+
+      // Clear input field
+      document.getElementById('chat-input').value = '';
+
+      // Simulate bot response (simple response for demo)
+      const botMessageElement = document.createElement('div');
+      botMessageElement.classList.add('message', 'bot');
+      botMessageElement.innerHTML = `<p>Thanks for your message! How else can I help you?</p>`;
+      document.getElementById('chatbox-body').appendChild(botMessageElement);
+
+      // Scroll to the latest message
+      document.getElementById('chatbox-body').scrollTop = document.getElementById('chatbox-body').scrollHeight;
+    });
+  </script>
 </body>
 </html>
