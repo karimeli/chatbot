@@ -1,4 +1,4 @@
-/* Base colors */
+
 :root {
   --color1: #33AAEE;
   --color2: #4996C3;
@@ -7,10 +7,10 @@
   --color5: #033552;
 }
 
-/* Body Styling */
+
 body {
   background-color: var(--color5);
-  color: black; /* Changed text color to black */
+  color: black; 
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
@@ -19,41 +19,47 @@ body {
   align-items: center;
   height: 100vh;
   text-align: center;
+  overflow: hidden;
 }
 
-/* Chatbox Container */
+
 .chatbox-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
   width: 300px;
   height: 400px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header Styling */
+
 .chatbox-header {
   background-color: var(--color1);
   color: #fff;
   padding: 10px;
   text-align: center;
   font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
-/* Chatbox Body */
+
 .chatbox-body {
   padding: 10px;
   height: 300px;
   overflow-y: auto;
+  flex-grow: 1;
 }
 
-/* Footer Styling */
+
 .chatbox-footer {
   padding: 10px;
   background-color: #f1f1f1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .message {
@@ -69,7 +75,7 @@ body {
 }
 
 .chat-input {
-  width: 100%;
+  width: 80%;
   padding: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
