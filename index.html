@@ -1,35 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chatbot Section</title>
+  <title>Chatbot Lenguaje de Señas</title>
+  
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-
   <div class="chatbox-container">
-    <!-- Header -->
-    <div class="chatbox-header">
-      Chatbot
-    </div>
+    <div class="chatbox-header">Chatbot Lenguaje de Señas</div>
 
-    
-    <div class="chatbox-body" id="chatbox-body">
-      <div class="message bot">
-        <p>Hola ¿Cómo te puedo ayudar?</p>
-      </div>
-    </div>
+    <div id="chatbox-body" class="chatbox-body"></div>
 
-   
     <div class="chatbox-footer">
-      <input type="text" id="chat-input" class="chat-input" placeholder="Type your message..." />
-      <button id="send-btn" class="send-btn">Send</button>
+      <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje..." />
+      <button id="send-btn" class="send-btn">Enviar</button>
     </div>
-  </div>
 
-  
-  <script src="/scripts/chatbot.js"></script>
+    <button id="sign-language-btn" class="send-btn">Activar Lenguaje de Señas</button>
+    <button id="history-btn" class="send-btn">Mostrar Historial</button>
+  </div>
+  <script src="chatbot.js"></script>
 </body>
 </html>
+
