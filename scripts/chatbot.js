@@ -5,13 +5,14 @@ const signLanguageButton = document.getElementById('sign-language-btn');
 let isSignLanguage = false;
 let history = []; 
 
+
 function addUserMessage(message) {
   const userMessageElement = document.createElement('div');
   userMessageElement.classList.add('message', 'user');
   userMessageElement.innerHTML = `<p>${message}</p>`;
   chatBoxBody.appendChild(userMessageElement);
 
-
+ 
   history.push({ type: 'user', message: message });
 }
 
@@ -22,22 +23,14 @@ function addBotMessage(responseText) {
   
   let botResponse = responseText || "Gracias por tu mensaje! ¿Cómo más puedo ayudarte?";
 
-  if (isSignLanguage) {
-    botMessageElement.innerHTML = translateToSignLanguage(botResponse);
-  } else {
-    botMessageElement.innerHTML = `<p>${botResponse}</p>`;
-  }
-
+  
+  botMessageElement.innerHTML = `<p>${botResponse}</p>`;
   chatBoxBody.appendChild(botMessageElement);
+
 
   history.push({ type: 'bot', message: botResponse });
 }
 
-
-function translateToSignLanguage(responseText) {
- 
-  return `<img src="signs/${responseText.toLowerCase().replace(/ /g, '_')}.png" alt="Sign Language Gesture">`;
-}
 
 function updateChatDisplay() {
   if (isSignLanguage) {
@@ -53,23 +46,22 @@ signLanguageButton.addEventListener('click', function() {
   updateChatDisplay();
 });
 
-
 sendButton.addEventListener('click', function() {
   const userMessage = chatInput.value;
 
   if (userMessage.trim() === '') return;
 
-  
   addUserMessage(userMessage);
+
 
   chatInput.value = '';
 
- 
+  
   if (userMessage.trim().endsWith('?')) {
-    
+ 
     let botResponse = "";
 
-    
+
     if (userMessage.toLowerCase().includes("funcionamiento del guante")) {
       botResponse = "El funcionamiento del guante implica el uso de sensores para detectar los movimientos de la mano y traducirlos en comandos o interacciones dentro de un sistema, como una aplicación o un dispositivo.";
     } else if (userMessage.toLowerCase().includes("soporte técnico")) {
@@ -83,13 +75,13 @@ sendButton.addEventListener('click', function() {
     
     addBotMessage(botResponse);
   } else {
-   
     addBotMessage("Por favor, hazme una pregunta para poder ayudarte.");
   }
 
-  
+
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 });
+
 
 function showHistory() {
   const historyButton = document.getElementById('history-btn');
@@ -101,5 +93,6 @@ function showHistory() {
     alert(historyText); 
   });
 }
+
 
 showHistory();
