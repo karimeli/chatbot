@@ -4,7 +4,7 @@
   --color3: #076AA3;
   --color4: #054F7A;
   --color5: #033552;
-  --soft-blue: #7CB6D7;  
+  --soft-blue: #7CB6D7;  /* Azul más suave para los triángulos */
 }
 
 body {
@@ -26,7 +26,7 @@ body {
 .chatbox-container {
   width: 300px;
   height: 400px;
-  background-color: rgba(255, 255, 255, 0.8);  
+  background-color: rgba(255, 255, 255, 0.8); 
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -198,7 +198,6 @@ body {
   left: 70%;
   animation-duration: 10s;
 }
-
 
 body::before {
   content: "";
