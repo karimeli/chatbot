@@ -4,6 +4,7 @@
   --color3: #076AA3;
   --color4: #054F7A;
   --color5: #033552;
+  --soft-blue: #7CB6D7;  
 }
 
 body {
@@ -25,7 +26,7 @@ body {
 .chatbox-container {
   width: 300px;
   height: 400px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8);  
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -157,7 +158,7 @@ body {
   height: 0;
   border-left: 50px solid transparent;
   border-right: 50px solid transparent;
-  border-bottom: 100px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 100px solid var(--soft-blue);  /* Azul más suave */
   animation: triangleMove 5s infinite ease-in-out;
   pointer-events: none;
 }
@@ -209,29 +210,3 @@ body::before {
   pointer-events: none;
   z-index: -1;
 }
-
-body::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -1;
-}
-
-body::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -1;
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2) 10px, transparent 10px, transparent 20px);
-  opacity: 0.2;
-}
-
-
