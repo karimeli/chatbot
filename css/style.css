@@ -8,6 +8,9 @@
 
 body {
   background-color: var(--color5);
+  background-image: url('/src/hello.gif'); /* Añade aquí la URL del gif */
+  background-size: cover; /* Asegura que el gif cubra todo el fondo */
+  background-position: center; /* Centra el gif */
   color: black;
   font-family: 'Arial', sans-serif;
   margin: 0;
