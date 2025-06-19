@@ -1,10 +1,8 @@
 const sendButton = document.getElementById('send-btn');
 const chatInput = document.getElementById('chat-input');
 const chatBoxBody = document.getElementById('chatbox-body');
-const signLanguageButton = document.getElementById('sign-language-btn');
-let isSignLanguage = false;
+const historyButton = document.getElementById('history-btn');
 let history = []; 
-
 
 function addUserMessage(message) {
   const userMessageElement = document.createElement('div');
@@ -12,7 +10,7 @@ function addUserMessage(message) {
   userMessageElement.innerHTML = `<p>${message}</p>`;
   chatBoxBody.appendChild(userMessageElement);
 
- 
+
   history.push({ type: 'user', message: message });
 }
 
@@ -23,7 +21,6 @@ function addBotMessage(responseText) {
   
   let botResponse = responseText || "Gracias por tu mensaje! ¿Cómo más puedo ayudarte?";
 
-  
   botMessageElement.innerHTML = `<p>${botResponse}</p>`;
   chatBoxBody.appendChild(botMessageElement);
 
@@ -32,36 +29,23 @@ function addBotMessage(responseText) {
 }
 
 
-function updateChatDisplay() {
-  if (isSignLanguage) {
-    signLanguageButton.innerHTML = "Desactivar Lenguaje de Señas";
-  } else {
-    signLanguageButton.innerHTML = "Activar Lenguaje de Señas";
-  }
-}
-
-
-signLanguageButton.addEventListener('click', function() {
-  isSignLanguage = !isSignLanguage;
-  updateChatDisplay();
-});
-
 sendButton.addEventListener('click', function() {
   const userMessage = chatInput.value;
 
   if (userMessage.trim() === '') return;
 
+
   addUserMessage(userMessage);
 
-
+ 
   chatInput.value = '';
 
   
   if (userMessage.trim().endsWith('?')) {
- 
+    
     let botResponse = "";
 
-
+    
     if (userMessage.toLowerCase().includes("funcionamiento del guante")) {
       botResponse = "El funcionamiento del guante implica el uso de sensores para detectar los movimientos de la mano y traducirlos en comandos o interacciones dentro de un sistema, como una aplicación o un dispositivo.";
     } else if (userMessage.toLowerCase().includes("soporte técnico")) {
@@ -72,27 +56,22 @@ sendButton.addEventListener('click', function() {
       botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
     }
 
-    
+    t
     addBotMessage(botResponse);
   } else {
+  
     addBotMessage("Por favor, hazme una pregunta para poder ayudarte.");
   }
-
 
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 });
 
 
-function showHistory() {
-  const historyButton = document.getElementById('history-btn');
-  historyButton.addEventListener('click', function() {
-    let historyText = "<h3>Historial de Mensajes:</h3>";
-    history.forEach(item => {
-      historyText += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
-    });
-    alert(historyText); 
+historyButton.addEventListener('click', function() {
+  let historyText = "<h3>Historial de Mensajes:</h3>";
+  history.forEach(item => {
+    historyText += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
   });
-}
+  alert(historyText); 
+});
 
-
-showHistory();
