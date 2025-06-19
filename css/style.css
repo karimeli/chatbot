@@ -1,14 +1,15 @@
 :root {
-  --color1: #33AAEE;
+  --color1: #33AAEE;  /* Fondo en azul claro */
   --color2: #4996C3;
-  --color3: #076AA3;
+  --color3: #076AA3;  /* Triángulos en azul oscuro */
   --color4: #054F7A;
   --color5: #033552;
-  --soft-blue: #7CB6D7;  /* Azul más suave para los triángulos */
+  --soft-blue: #7CB6D7;  /* Azul más suave para otros elementos si se necesita */
+  --circle-color: #FFFFFF;  /* Color blanco para los círculos */
 }
 
 body {
-  background-color: var(--color5);
+  background-color: var(--color1);  /* Fondo con azul claro */
   color: black;
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -20,13 +21,13 @@ body {
   text-align: center;
   overflow: hidden;
   position: relative;
-  animation: fadeIn 1s ease-in-out;
+  animation: fadeIn 1s ease-in-out, backgroundGradient 10s infinite alternate; /* Animación del fondo */
 }
 
 .chatbox-container {
   width: 300px;
   height: 400px;
-  background-color: rgba(255, 255, 255, 0.8); 
+  background-color: rgba(255, 255, 255, 0.8);  /* Fondo semitransparente para los cuadros */
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -38,14 +39,13 @@ body {
 }
 
 .chatbox-header {
-  background-color: var(--color1);
+  background-color: var(--color3);  /* Fondo del header en azul oscuro */
   color: #fff;
   padding: 10px;
   text-align: center;
   font-weight: bold;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  animation: fadeIn 1s ease-out;
 }
 
 .chatbox-body {
@@ -53,7 +53,6 @@ body {
   height: 300px;
   overflow-y: auto;
   flex-grow: 1;
-  animation: fadeIn 1.5s ease-out;
 }
 
 .chatbox-footer {
@@ -62,7 +61,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  animation: fadeIn 2s ease-out;
 }
 
 .message {
@@ -88,11 +86,11 @@ body {
 }
 
 .chat-input:focus {
-  border-color: var(--color1);
+  border-color: var(--color3);  /* Borde enfocado con azul oscuro */
 }
 
 .send-btn {
-  background-color: var(--color1);
+  background-color: var(--color3);  /* Botón de envío con azul oscuro */
   color: white;
   border: none;
   border-radius: 5px;
@@ -102,7 +100,7 @@ body {
 }
 
 .send-btn:hover {
-  background-color: var(--color2);
+  background-color: var(--color2);  /* Botón cambia a azul más claro en hover */
   transform: scale(1.1);
 }
 
@@ -137,14 +135,15 @@ body {
   }
 }
 
-@keyframes triangleMove {
+/* Animación de círculo moviéndose */
+@keyframes circleMove {
   0% {
     transform: translate(0, 0);
     opacity: 1;
   }
   50% {
-    transform: translate(50px, 50px);
-    opacity: 0.5;
+    transform: translate(100px, 100px);
+    opacity: 0.6;
   }
   100% {
     transform: translate(0, 0);
@@ -152,53 +151,55 @@ body {
   }
 }
 
-.triangle {
+/* Círculos animados */
+.circle {
   position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
-  border-bottom: 100px solid var(--soft-blue);  /* Azul más suave */
-  animation: triangleMove 5s infinite ease-in-out;
+  width: 80px;  /* Aumenté el tamaño para mejor visibilidad */
+  height: 80px; /* Aumenté el tamaño para mejor visibilidad */
+  border-radius: 50%;
+  background-color: var(--circle-color);  /* Color blanco para los círculos */
+  animation: circleMove 5s infinite ease-in-out;
   pointer-events: none;
+  z-index: -2;  /* Asegura que los círculos estén detrás del contenido, pero no detrás de otros elementos */
 }
 
-.triangle:nth-child(1) {
+.circle:nth-child(1) {
   top: 10%;
   left: 10%;
   animation-duration: 5s;
 }
 
-.triangle:nth-child(2) {
+.circle:nth-child(2) {
   top: 30%;
   left: 50%;
   animation-duration: 6s;
 }
 
-.triangle:nth-child(3) {
+.circle:nth-child(3) {
   top: 50%;
   left: 80%;
   animation-duration: 7s;
 }
 
-.triangle:nth-child(4) {
+.circle:nth-child(4) {
   top: 70%;
   left: 20%;
   animation-duration: 8s;
 }
 
-.triangle:nth-child(5) {
+.circle:nth-child(5) {
   top: 80%;
   left: 60%;
   animation-duration: 9s;
 }
 
-.triangle:nth-child(6) {
+.circle:nth-child(6) {
   top: 20%;
   left: 70%;
   animation-duration: 10s;
 }
 
+/* Crea los círculos en el fondo */
 body::before {
   content: "";
   position: absolute;
@@ -207,5 +208,18 @@ body::before {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: -1;
+  z-index: -1; /* Asegura que las formas estén en el fondo */
+}
+
+/* Animación de gradiente en el fondo */
+@keyframes backgroundGradient {
+  0% {
+    background: linear-gradient(45deg, var(--color1), var(--color2));
+  }
+  50% {
+    background: linear-gradient(45deg, var(--color2), var(--color3));
+  }
+  100% {
+    background: linear-gradient(45deg, var(--color1), var(--color2));
+  }
 }
