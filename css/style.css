@@ -1,11 +1,11 @@
 :root {
   --color1: #33AAEE;  /* Fondo en azul claro */
   --color2: #4996C3;
-  --color3: #076AA3;  /* Triángulos en azul oscuro */
+  --color3: #076AA3;  /* Cuadrados en azul oscuro */
   --color4: #054F7A;
   --color5: #033552;
   --soft-blue: #7CB6D7;  /* Azul más suave para otros elementos si se necesita */
-  --circle-color: #FFFFFF;  /* Color blanco para los círculos */
+  --square-color: #33AAEE;  /* Color de los cuadrados, igual que el fondo */
 }
 
 body {
@@ -21,7 +21,7 @@ body {
   text-align: center;
   overflow: hidden;
   position: relative;
-  animation: fadeIn 1s ease-in-out, backgroundGradient 10s infinite alternate; /* Animación del fondo */
+  animation: fadeIn 1s ease-in-out;
 }
 
 .chatbox-container {
@@ -135,71 +135,70 @@ body {
   }
 }
 
-/* Animación de círculo moviéndose */
-@keyframes circleMove {
+/* Animación de cuadrado moviéndose */
+@keyframes squareMove {
   0% {
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
     opacity: 1;
   }
   50% {
-    transform: translate(100px, 100px);
+    transform: translate(100px, 100px) scale(1.2);
     opacity: 0.6;
   }
   100% {
-    transform: translate(0, 0);
+    transform: translate(0, 0) scale(1);
     opacity: 1;
   }
 }
 
-/* Círculos animados */
-.circle {
+/* Cuadrados animados */
+.square {
   position: absolute;
-  width: 80px;  /* Aumenté el tamaño para mejor visibilidad */
-  height: 80px; /* Aumenté el tamaño para mejor visibilidad */
-  border-radius: 50%;
-  background-color: var(--circle-color);  /* Color blanco para los círculos */
-  animation: circleMove 5s infinite ease-in-out;
+  width: 80px;  /* Tamaño de los cuadrados */
+  height: 80px; /* Tamaño de los cuadrados */
+  background-color: var(--square-color);  /* Color de los cuadrados, igual que el fondo */
+  animation: squareMove 5s infinite ease-in-out;
   pointer-events: none;
-  z-index: -2;  /* Asegura que los círculos estén detrás del contenido, pero no detrás de otros elementos */
+  z-index: -1;  /* Asegura que los cuadrados estén detrás del contenido */
 }
 
-.circle:nth-child(1) {
+.square:nth-child(1) {
   top: 10%;
   left: 10%;
   animation-duration: 5s;
 }
 
-.circle:nth-child(2) {
+.square:nth-child(2) {
   top: 30%;
   left: 50%;
   animation-duration: 6s;
 }
 
-.circle:nth-child(3) {
+.square:nth-child(3) {
   top: 50%;
   left: 80%;
   animation-duration: 7s;
 }
 
-.circle:nth-child(4) {
+.square:nth-child(4) {
   top: 70%;
   left: 20%;
   animation-duration: 8s;
 }
 
-.circle:nth-child(5) {
+.square:nth-child(5) {
   top: 80%;
   left: 60%;
   animation-duration: 9s;
 }
 
-.circle:nth-child(6) {
+.square:nth-child(6) {
   top: 20%;
   left: 70%;
   animation-duration: 10s;
 }
 
-/* Crea los círculos en el fondo */
+/* Crea los cuadrados en el fondo */
 body::before {
   content: "";
   position: absolute;
@@ -209,17 +208,4 @@ body::before {
   height: 100%;
   pointer-events: none;
   z-index: -1; /* Asegura que las formas estén en el fondo */
-}
-
-/* Animación de gradiente en el fondo */
-@keyframes backgroundGradient {
-  0% {
-    background: linear-gradient(45deg, var(--color1), var(--color2));
-  }
-  50% {
-    background: linear-gradient(45deg, var(--color2), var(--color3));
-  }
-  100% {
-    background: linear-gradient(45deg, var(--color1), var(--color2));
-  }
 }
