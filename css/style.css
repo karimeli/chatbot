@@ -1,15 +1,13 @@
 :root {
-  --color1: #33AAEE;  /* Fondo en azul claro */
-  --color2: #4996C3;
-  --color3: #076AA3;  /* Cuadrados en azul oscuro */
-  --color4: #054F7A;
-  --color5: #033552;
-  --soft-blue: #7CB6D7;  /* Azul más suave para otros elementos si se necesita */
-  --square-color: #33AAEE;  /* Color de los cuadrados, igual que el fondo */
+  --color1: #33AAEE;  
+  --color2: #4996C3;  
+  --color3: #076AA3;  
+  --color4: #054F7A;  
+  --color5: #033552;  
 }
 
 body {
-  background-color: var(--color1);  /* Fondo con azul claro */
+  background-color: var(--color1);  
   color: black;
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -21,13 +19,13 @@ body {
   text-align: center;
   overflow: hidden;
   position: relative;
-  animation: fadeIn 1s ease-in-out;
+  animation: fadeIn 1s ease-in-out, waveAnimation 6s ease-in-out infinite;
 }
 
 .chatbox-container {
   width: 300px;
   height: 400px;
-  background-color: rgba(255, 255, 255, 0.8);  /* Fondo semitransparente para los cuadros */
+  background-color: rgba(255, 255, 255, 0.8);  
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -39,7 +37,7 @@ body {
 }
 
 .chatbox-header {
-  background-color: var(--color3);  /* Fondo del header en azul oscuro */
+  background-color: var(--color3); 
   color: #fff;
   padding: 10px;
   text-align: center;
@@ -86,11 +84,11 @@ body {
 }
 
 .chat-input:focus {
-  border-color: var(--color3);  /* Borde enfocado con azul oscuro */
+  border-color: var(--color3); 
 }
 
 .send-btn {
-  background-color: var(--color3);  /* Botón de envío con azul oscuro */
+  background-color: var(--color3);
   color: white;
   border: none;
   border-radius: 5px;
@@ -100,7 +98,7 @@ body {
 }
 
 .send-btn:hover {
-  background-color: var(--color2);  /* Botón cambia a azul más claro en hover */
+  background-color: var(--color2); 
   transform: scale(1.1);
 }
 
@@ -135,77 +133,27 @@ body {
   }
 }
 
-/* Animación de cuadrado moviéndose */
-@keyframes squareMove {
+/* Animación de ondas */
+@keyframes waveAnimation {
   0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 1;
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
   }
   50% {
-    transform: translate(100px, 100px) scale(1.2);
-    opacity: 0.6;
+    background-position: 200% 50%;
+  }
+  75% {
+    background-position: 300% 50%;
   }
   100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 1;
+    background-position: 400% 50%;
   }
 }
 
-/* Cuadrados animados */
-.square {
-  position: absolute;
-  width: 80px;  /* Tamaño de los cuadrados */
-  height: 80px; /* Tamaño de los cuadrados */
-  background-color: var(--square-color);  /* Color de los cuadrados, igual que el fondo */
-  animation: squareMove 5s infinite ease-in-out;
-  pointer-events: none;
-  z-index: -1;  /* Asegura que los cuadrados estén detrás del contenido */
-}
-
-.square:nth-child(1) {
-  top: 10%;
-  left: 10%;
-  animation-duration: 5s;
-}
-
-.square:nth-child(2) {
-  top: 30%;
-  left: 50%;
-  animation-duration: 6s;
-}
-
-.square:nth-child(3) {
-  top: 50%;
-  left: 80%;
-  animation-duration: 7s;
-}
-
-.square:nth-child(4) {
-  top: 70%;
-  left: 20%;
-  animation-duration: 8s;
-}
-
-.square:nth-child(5) {
-  top: 80%;
-  left: 60%;
-  animation-duration: 9s;
-}
-
-.square:nth-child(6) {
-  top: 20%;
-  left: 70%;
-  animation-duration: 10s;
-}
-
-/* Crea los cuadrados en el fondo */
-body::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -1; /* Asegura que las formas estén en el fondo */
+body {
+  background: linear-gradient(45deg, var(--color1), var(--color2), var(--color3), var(--color4)); 
+  background-size: 400% 400%; 
+  animation: waveAnimation 6s ease-in-out infinite; 
 }
