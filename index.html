@@ -12,7 +12,12 @@
   <div class="chatbox-container">
     <div class="chatbox-header">Chatbot Lenguaje de Señas</div>
 
-    <div id="chatbox-body" class="chatbox-body"></div>
+    <div id="chatbox-body" class="chatbox-body">
+      <!-- Mensaje inicial que se mostrará al cargar la página -->
+      <div class="message bot">
+        <p>¿En qué puedo ayudarte?</p>
+      </div>
+    </div>
 
     <div class="chatbox-footer">
       <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje..." />
@@ -22,7 +27,8 @@
     <button id="history-btn" class="send-btn">Mostrar Historial</button>
   </div>
 
-  <script src="chatbot.js"></script>
+  <script src="/scripts/chatbot.js"></script>
 </body>
 </html>
+
 
