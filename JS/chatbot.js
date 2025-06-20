@@ -42,13 +42,13 @@ sendButton.addEventListener('click', function() {
 
   chatInput.value = '';
 
-  // Responder solo a preguntas, validando si termina en "?"
+
   if (userMessage.trim().endsWith('?')) {
     let botResponse = "";
 
-    // Buscar las respuestas correspondientes a las colecciones
+ 
     if (userMessage.toLowerCase().includes("expresiones")) {
-      Expresiones.findOne()  // Buscar una respuesta en la colección "expresiones"
+      Expresiones.findOne()  
         .then(respuesta => {
           botResponse = respuesta ? respuesta.descripcion : "Lo siento, no tengo información sobre este tema.";
           addBotMessage(botResponse);
@@ -56,7 +56,7 @@ sendButton.addEventListener('click', function() {
         .catch(err => console.log("Error al obtener respuesta de la colección 'expresiones'", err));
 
     } else if (userMessage.toLowerCase().includes("historia")) {
-      Historia.findOne()  // Buscar una respuesta en la colección "historia"
+      Historia.findOne() 
         .then(respuesta => {
           botResponse = respuesta ? respuesta.descripcion : "Lo siento, no tengo información sobre este tema.";
           addBotMessage(botResponse);
@@ -64,7 +64,7 @@ sendButton.addEventListener('click', function() {
         .catch(err => console.log("Error al obtener respuesta de la colección 'historia'", err));
 
     } else if (userMessage.toLowerCase().includes("funcionamiento de la app")) {
-      FuncionamientoApp.findOne()  // Buscar una respuesta en la colección "funcionamientoApp"
+      FuncionamientoApp.findOne() 
         .then(respuesta => {
           botResponse = respuesta ? respuesta.descripcion : "Lo siento, no tengo información sobre este tema.";
           addBotMessage(botResponse);
@@ -76,7 +76,7 @@ sendButton.addEventListener('click', function() {
       addBotMessage(botResponse);
     }
   } else {
-    // Si no es una pregunta, el bot recuerda que solo responde preguntas
+
     addBotMessage("Por favor, hazme una pregunta para poder ayudarte.");
   }
 
