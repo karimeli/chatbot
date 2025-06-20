@@ -1,5 +1,4 @@
-const path = require('path');
-const { Expresiones, Historia, FuncionamientoApp } = require(path.resolve(__dirname, '../script/db.js'));  // Asegúrate de que la ruta sea correcta
+const { Expresiones, Historia, FuncionamientoApp } = require('./db.js');  // Ruta relativa ahora que db.js está en la misma carpeta
 
 const sendButton = document.getElementById('send-btn');
 const chatInput = document.getElementById('chat-input');
@@ -74,6 +73,7 @@ sendButton.addEventListener('click', async function() {
       addBotMessage("Hubo un problema al obtener la respuesta, por favor intenta de nuevo.");
     }
   } else {
+
     addBotMessage("Por favor, hazme una pregunta para poder ayudarte.");
   }
 
