@@ -1,4 +1,4 @@
-const { Expresiones, Historia, FuncionamientoApp } = require('./db.js');  // Ruta relativa ahora que db.js está en la misma carpeta
+const { Expresiones, Historia, FuncionamientoApp } = require('./db');  // Ruta relativa ahora que db.js está en la misma carpeta
 
 const sendButton = document.getElementById('send-btn');
 const chatInput = document.getElementById('chat-input');
