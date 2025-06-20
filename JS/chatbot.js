@@ -1,4 +1,5 @@
-const { Expresiones, Historia, FuncionamientoApp } = require('../script/db'); 
+const path = require('path');
+const { Expresiones, Historia, FuncionamientoApp } = require(path.resolve(__dirname, '../script/db.js'));
 
 const sendButton = document.getElementById('send-btn');
 const chatInput = document.getElementById('chat-input');
