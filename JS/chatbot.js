@@ -1,4 +1,4 @@
-
+// chatbot.js
 
 const sendButton = document.getElementById('send-btn');
 const chatInput = document.getElementById('chat-input');
@@ -7,7 +7,13 @@ const historyButton = document.getElementById('history-btn');
 const hideHistoryButton = document.getElementById('hide-history-btn');
 const clearHistoryButton = document.getElementById('clear-history-btn');
 const historyContainer = document.getElementById('history-container');
-let history = []; 
+let history = [];  
+
+
+function clearChat() {
+  chatBoxBody.innerHTML = '';
+}
+
 
 function addUserMessage(message) {
   const userMessageElement = document.createElement('div');
@@ -17,9 +23,8 @@ function addUserMessage(message) {
 
 
   history.push({ type: 'user', message: message });
-  scrollToBottom();  
+  scrollToBottom(); 
 }
-
 
 function addBotMessage(responseText) {
   const botMessageElement = document.createElement('div');
@@ -30,10 +35,11 @@ function addBotMessage(responseText) {
   botMessageElement.innerHTML = `<p>${botResponse}</p>`;
   chatBoxBody.appendChild(botMessageElement);
 
-  
+
   history.push({ type: 'bot', message: botResponse });
-  scrollToBottom();  
+  scrollToBottom();  // 
 }
+
 
 function scrollToBottom() {
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
@@ -45,15 +51,17 @@ sendButton.addEventListener('click', function() {
 
   if (userMessage.trim() === '') return;
 
+  clearChat();
+
   addUserMessage(userMessage);
 
-  
+
   chatInput.value = '';
 
-  //
   if (userMessage.trim().endsWith('?')) {
     let botResponse = "";
 
+   
     if (userMessage.toLowerCase().includes("expresiones")) {
       fetch('http://localhost:3000/api/expresiones')
         .then(response => response.json())
@@ -90,21 +98,19 @@ sendButton.addEventListener('click', function() {
     addBotMessage("Por favor, hazme una pregunta para poder ayudarte.");
   }
 
-  
+ 
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 });
 
-// 
+
 historyButton.addEventListener('click', function() {
-  // Mostrar el historial
+
   historyContainer.style.display = 'block';  
-  historyButton.style.display = 'none';  
-  hideHistoryButton.style.display = 'inline'; 
+  hideHistoryButton.style.display = 'inline';  
   clearHistoryButton.style.display = 'inline'; 
 
   
-  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>";  
-
+  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>"; 
 
   history.forEach(item => {
     historyContainer.innerHTML += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
@@ -113,16 +119,16 @@ historyButton.addEventListener('click', function() {
 
 
 hideHistoryButton.addEventListener('click', function() {
- 
+  
   historyContainer.style.display = 'none';  
   hideHistoryButton.style.display = 'none';  
-  historyButton.style.display = 'inline'; 
+  historyButton.style.display = 'inline';  
   clearHistoryButton.style.display = 'none'; 
 });
 
 
 clearHistoryButton.addEventListener('click', function() {
-
+ 
   history = [];  
-  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>";  
+  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>"; 
 });
