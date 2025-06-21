@@ -1,25 +1,26 @@
-const path = require('path');
-const { Expresiones, Historia, FuncionamientoApp } = require(path.resolve(__dirname, './db.js'));
 
 
 const sendButton = document.getElementById('send-btn');
 const chatInput = document.getElementById('chat-input');
 const chatBoxBody = document.getElementById('chatbox-body');
 const historyButton = document.getElementById('history-btn');
-let history = [];  // Historial de mensajes
+const hideHistoryButton = document.getElementById('hide-history-btn');
+const clearHistoryButton = document.getElementById('clear-history-btn');
+const historyContainer = document.getElementById('history-container');
+let history = []; 
 
-// Función para agregar mensaje del usuario
 function addUserMessage(message) {
   const userMessageElement = document.createElement('div');
   userMessageElement.classList.add('message', 'user');
   userMessageElement.innerHTML = `<p>${message}</p>`;
   chatBoxBody.appendChild(userMessageElement);
 
-  // Agregar al historial de mensajes
+
   history.push({ type: 'user', message: message });
+  scrollToBottom();  
 }
 
-// Función para agregar mensaje del bot
+
 function addBotMessage(responseText) {
   const botMessageElement = document.createElement('div');
   botMessageElement.classList.add('message', 'bot');
@@ -29,65 +30,99 @@ function addBotMessage(responseText) {
   botMessageElement.innerHTML = `<p>${botResponse}</p>`;
   chatBoxBody.appendChild(botMessageElement);
 
-  // Agregar al historial de mensajes
+  
   history.push({ type: 'bot', message: botResponse });
+  scrollToBottom();  
 }
 
-// Función para manejar el envío de preguntas
-sendButton.addEventListener('click', async function() {
+function scrollToBottom() {
+  chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
+}
+
+
+sendButton.addEventListener('click', function() {
   const userMessage = chatInput.value;
 
   if (userMessage.trim() === '') return;
 
-  // Agregar mensaje del usuario
   addUserMessage(userMessage);
 
-  // Limpiar el campo de entrada
+  
   chatInput.value = '';
 
-  // Responder solo a preguntas, validando si termina en "?"
+  //
   if (userMessage.trim().endsWith('?')) {
     let botResponse = "";
 
-    try {
-      // Buscar las respuestas correspondientes a las colecciones
-      if (userMessage.toLowerCase().includes("expresiones")) {
-        const respuesta = await Expresiones.findOne();  // Esperar la respuesta de MongoDB
-        botResponse = respuesta ? respuesta.descripcion : "Lo siento, no tengo información sobre este tema.";
-        addBotMessage(botResponse);
+    if (userMessage.toLowerCase().includes("expresiones")) {
+      fetch('http://localhost:3000/api/expresiones')
+        .then(response => response.json())
+        .then(data => {
+          botResponse = data.descripcion;
+          addBotMessage(botResponse);
+        })
+        .catch(err => console.error("Error al obtener datos:", err));
 
-      } else if (userMessage.toLowerCase().includes("historia")) {
-        const respuesta = await Historia.findOne();  // Esperar la respuesta de MongoDB
-        botResponse = respuesta ? respuesta.descripcion : "Lo siento, no tengo información sobre este tema.";
-        addBotMessage(botResponse);
+    } else if (userMessage.toLowerCase().includes("historia")) {
+      fetch('http://localhost:3000/api/historia')
+        .then(response => response.json())
+        .then(data => {
+          botResponse = data.descripcion;
+          addBotMessage(botResponse);
+        })
+        .catch(err => console.error("Error al obtener datos:", err));
 
-      } else if (userMessage.toLowerCase().includes("funcionamiento de la app")) {
-        const respuesta = await FuncionamientoApp.findOne();  // Esperar la respuesta de MongoDB
-        botResponse = respuesta ? respuesta.descripcion : "Lo siento, no tengo información sobre este tema.";
-        addBotMessage(botResponse);
+    } else if (userMessage.toLowerCase().includes("funcionamiento de la app")) {
+      fetch('http://localhost:3000/api/funcionamientoApp')
+        .then(response => response.json())
+        .then(data => {
+          botResponse = data.descripcion;
+          addBotMessage(botResponse);
+        })
+        .catch(err => console.error("Error al obtener datos:", err));
 
-      } else {
-        botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
-        addBotMessage(botResponse);
-      }
-    } catch (err) {
-      console.error("Error al obtener la respuesta de MongoDB:", err);
-      addBotMessage("Hubo un problema al obtener la respuesta, por favor intenta de nuevo.");
+    } else {
+      botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
+      addBotMessage(botResponse);
     }
   } else {
 
     addBotMessage("Por favor, hazme una pregunta para poder ayudarte.");
   }
 
-  // Hacer scroll hacia abajo en el chat
+  
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 });
 
-// Función para mostrar el historial de prompts
+// 
 historyButton.addEventListener('click', function() {
-  let historyText = "<h3>Historial de Mensajes:</h3>";
+  // Mostrar el historial
+  historyContainer.style.display = 'block';  
+  historyButton.style.display = 'none';  
+  hideHistoryButton.style.display = 'inline'; 
+  clearHistoryButton.style.display = 'inline'; 
+
+  
+  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>";  
+
+
   history.forEach(item => {
-    historyText += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
+    historyContainer.innerHTML += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
   });
-  alert(historyText);  // Mostramos el historial en un popup
+});
+
+
+hideHistoryButton.addEventListener('click', function() {
+ 
+  historyContainer.style.display = 'none';  
+  hideHistoryButton.style.display = 'none';  
+  historyButton.style.display = 'inline'; 
+  clearHistoryButton.style.display = 'none'; 
+});
+
+
+clearHistoryButton.addEventListener('click', function() {
+
+  history = [];  
+  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>";  
 });

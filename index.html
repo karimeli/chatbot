@@ -4,16 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chatbot Lenguaje de Señas</title>
-  
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
   <div class="chatbox-container">
-    <div class="chatbox-header">Chatbot </div>
+    <div class="chatbox-header">Chatbot Lenguaje de Señas</div>
 
     <div id="chatbox-body" class="chatbox-body">
-      <!-- Mensaje inicial que se mostrará al cargar la página -->
       <div class="message bot">
         <p>¿En qué puedo ayudarte?</p>
       </div>
@@ -24,11 +22,18 @@
       <button id="send-btn" class="send-btn">Enviar</button>
     </div>
 
+    
     <button id="history-btn" class="send-btn">Mostrar Historial</button>
+    <button id="hide-history-btn" class="send-btn" style="display: none;">Ocultar Historial</button>
+    <button id="clear-history-btn" class="send-btn" style="display: none;">Limpiar Historial</button>
+
+   
+    <div id="history-container" style="display: none;">
+      <h3>Historial de Conversación</h3>
+      
+    </div>
   </div>
 
-  <script src="/JS/chatbot.js"></script>
+  <script src="/js/chatbot.js"></script>
 </body>
 </html>
-
-
