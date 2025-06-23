@@ -7,18 +7,15 @@ const clearHistoryButton = document.getElementById('clear-history-btn');
 const historyContainer = document.getElementById('history-container');
 let history = []; 
 
-
 function addUserMessage(message) {
   const userMessageElement = document.createElement('div');
   userMessageElement.classList.add('message', 'user');
   userMessageElement.innerHTML = `<p>${message}</p>`;
   chatBoxBody.appendChild(userMessageElement);
 
-  
   history.push({ type: 'user', message: message });
   scrollToBottom();  
 }
-
 
 function addBotMessage(responseText) {
   const botMessageElement = document.createElement('div');
@@ -33,31 +30,26 @@ function addBotMessage(responseText) {
   scrollToBottom();  // Hacer scroll al último mensaje
 }
 
-
 function scrollToBottom() {
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 }
-s
+
 sendButton.addEventListener('click', function() {
   const userMessage = chatInput.value;
 
   if (userMessage.trim() === '') return;
 
-
   clearChat();
 
-  
   addUserMessage(userMessage);
 
-  
   chatInput.value = '';
 
   if (userMessage.trim().endsWith('?')) {
     let botResponse = "";
 
-   
     if (userMessage.toLowerCase().includes("expresiones")) {
-      fetch('http://localhost:3000/api/expresiones')
+      fetch('http://localhost:3001/api/expresiones')
         .then(response => response.json())
         .then(data => {
           botResponse = data.descripcion;
@@ -66,7 +58,7 @@ sendButton.addEventListener('click', function() {
         .catch(err => console.error("Error al obtener datos de Expresiones:", err));
 
     } else if (userMessage.toLowerCase().includes("historia")) {
-      fetch('http://localhost:3000/api/historia')
+      fetch('http://localhost:3001/api/historia')
         .then(response => response.json())
         .then(data => {
           botResponse = data.descripcion;
@@ -75,7 +67,7 @@ sendButton.addEventListener('click', function() {
         .catch(err => console.error("Error al obtener datos de Historia:", err));
 
     } else if (userMessage.toLowerCase().includes("funcionamiento de la app")) {
-      fetch('http://localhost:3000/api/funcionamientoApp')
+      fetch('http://localhost:3001/api/funcionamientoApp')
         .then(response => response.json())
         .then(data => {
           botResponse = data.descripcion;
@@ -94,13 +86,11 @@ sendButton.addEventListener('click', function() {
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 });
 
-
 function clearChat() {
   chatBoxBody.innerHTML = '';
 }
 
 historyButton.addEventListener('click', function() {
-
   historyContainer.style.display = 'block';  
   historyButton.style.display = 'none'; 
   hideHistoryButton.style.display = 'inline';  
@@ -109,24 +99,19 @@ historyButton.addEventListener('click', function() {
   // Limpiar el contenido anterior del historial
   historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>"; 
 
- 
   history.forEach(item => {
     historyContainer.innerHTML += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
   });
 });
 
-
 hideHistoryButton.addEventListener('click', function() {
-  
   historyContainer.style.display = 'none';  
   hideHistoryButton.style.display = 'none'; 
   historyButton.style.display = 'inline';  
   clearHistoryButton.style.display = 'none'; 
 });
 
-
 clearHistoryButton.addEventListener('click', function() {
- 
   history = [];  
   historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>";  
-});
+});  
