@@ -17,65 +17,47 @@ async function connectDB() {
 
 connectDB();
 
-// Definición de los esquemas con el campo 'pregunta' y 'respuesta'
-const expresionesSchema = new mongoose.Schema({
+// Esquema común para todas las colecciones
+const General = mongoose.model('General', new mongoose.Schema({
   pregunta: { type: String, required: true },
   respuesta: { type: String, required: true },
+  categoria: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
-});
-
-const historiaSchema = new mongoose.Schema({
-  pregunta: { type: String, required: true },
-  respuesta: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-});
-
-const funcionamientoAppSchema = new mongoose.Schema({
-  pregunta: { type: String, required: true },
-  respuesta: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-});
-
-// Modelos de MongoDB
-const Expresiones = mongoose.model('Expresiones', expresionesSchema);
-const Historia = mongoose.model('Historia', historiaSchema);
-const FuncionamientoApp = mongoose.model('FuncionamientoApp', funcionamientoAppSchema);
+}).index({ pregunta: 'text' }));
 
 app.use(bodyParser.json());
 
-// Obtener respuestas de expresiones según la pregunta
+// Consulta para "expresiones"
 app.get('/api/expresiones', async (req, res) => {
   try {
-    const { pregunta } = req.query;  // Recibe la pregunta como parámetro en la consulta
-    console.log('Pregunta recibida en /api/expresiones:', pregunta); // Depuración: ver qué pregunta se recibe
+    const { pregunta } = req.query;
+    console.log('Pregunta recibida en /api/expresiones:', pregunta);
 
-    // Buscar la respuesta de la pregunta en la colección "Expresiones"
-    const respuesta = await Expresiones.findOne({ pregunta });
-
-    // Depuración: mostrar lo que se encuentra
-    console.log('Respuesta encontrada en base de datos:', respuesta); // Ver si la respuesta existe
+    const respuesta = await General.findOne({ 
+      $text: { $search: pregunta }, 
+      categoria: 'expresiones' 
+    });
 
     if (respuesta) {
-      res.json({ respuesta: respuesta.respuesta }); // Devuelve la respuesta correspondiente
+      res.json({ respuesta: respuesta.respuesta });
     } else {
-      res.json({ respuesta: 'Lo siento, no tengo información sobre este tema.' }); // Respuesta cuando no se encuentra
+      res.json({ respuesta: 'Lo siento, no tengo información sobre este tema.' });
     }
   } catch (err) {
-    res.status(500).json({ error: `Error al obtener respuestas de "Expresiones". ${err.message}` });
+    res.status(500).json({ error: `Error al obtener respuestas de "expresiones". ${err.message}` });
   }
 });
 
-// Obtener respuestas de historia según la pregunta
+// Consulta para "historia"
 app.get('/api/historia', async (req, res) => {
   try {
-    const { pregunta } = req.query;  // Recibe la pregunta como parámetro en la consulta
-    console.log('Pregunta recibida en /api/historia:', pregunta); // Depuración: ver qué pregunta se recibe
+    const { pregunta } = req.query;
+    console.log('Pregunta recibida en /api/historia:', pregunta);
 
-    // Buscar la respuesta de la pregunta en la colección "Historia"
-    const respuesta = await Historia.findOne({ pregunta });
-
-    // Depuración: mostrar lo que se encuentra
-    console.log('Respuesta encontrada en base de datos:', respuesta); // Ver si la respuesta existe
+    const respuesta = await General.findOne({
+      $text: { $search: pregunta },
+      categoria: 'historia'
+    });
 
     if (respuesta) {
       res.json({ respuesta: respuesta.respuesta });
@@ -83,21 +65,20 @@ app.get('/api/historia', async (req, res) => {
       res.json({ respuesta: 'Lo siento, no tengo información sobre este tema.' });
     }
   } catch (err) {
-    res.status(500).json({ error: `Error al obtener respuestas de "Historia". ${err.message}` });
+    res.status(500).json({ error: `Error al obtener respuestas de "historia". ${err.message}` });
   }
 });
 
-// Obtener respuestas de funcionamiento de la app según la pregunta
+// Consulta para "funcionamientoApp"
 app.get('/api/funcionamientoApp', async (req, res) => {
   try {
-    const { pregunta } = req.query;  // Recibe la pregunta como parámetro en la consulta
-    console.log('Pregunta recibida en /api/funcionamientoApp:', pregunta); // Depuración: ver qué pregunta se recibe
+    const { pregunta } = req.query;
+    console.log('Pregunta recibida en /api/funcionamientoApp:', pregunta);
 
-    // Buscar la respuesta de la pregunta en la colección "FuncionamientoApp"
-    const respuesta = await FuncionamientoApp.findOne({ pregunta });
-
-    // Depuración: mostrar lo que se encuentra
-    console.log('Respuesta encontrada en base de datos:', respuesta); // Ver si la respuesta existe
+    const respuesta = await General.findOne({
+      $text: { $search: pregunta },
+      categoria: 'funcionamientoApp'
+    });
 
     if (respuesta) {
       res.json({ respuesta: respuesta.respuesta });
@@ -105,7 +86,7 @@ app.get('/api/funcionamientoApp', async (req, res) => {
       res.json({ respuesta: 'Lo siento, no tengo información sobre este tema.' });
     }
   } catch (err) {
-    res.status(500).json({ error: `Error al obtener respuestas de "FuncionamientoApp". ${err.message}` });
+    res.status(500).json({ error: `Error al obtener respuestas de "funcionamientoApp". ${err.message}` });
   }
 });
 
