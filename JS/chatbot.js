@@ -27,7 +27,7 @@ function addBotMessage(responseText) {
   chatBoxBody.appendChild(botMessageElement);
 
   history.push({ type: 'bot', message: botResponse });
-  scrollToBottom();  // Hacer scroll al último mensaje
+  scrollToBottom();  
 }
 
 function scrollToBottom() {
