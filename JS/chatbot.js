@@ -48,11 +48,17 @@ sendButton.addEventListener('click', function() {
   if (userMessage.trim().endsWith('?')) {
     let botResponse = "";
 
+   
     if (userMessage.toLowerCase().includes("expresiones")) {
-      fetch(`http://localhost:3001/api/expresiones?pregunta=${encodeURIComponent(userMessage)}`)
+      fetch('http://localhost:3001/api/expresiones?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema.";
+       
+          if (Array.isArray(data) && data.length > 0) {
+            botResponse = data.map(item => item.respuesta).join(' '); 
+          } else {
+            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
+          }
           addBotMessage(botResponse);
         })
         .catch(err => {
@@ -61,10 +67,14 @@ sendButton.addEventListener('click', function() {
         });
 
     } else if (userMessage.toLowerCase().includes("historia")) {
-      fetch(`http://localhost:3001/api/historia?pregunta=${encodeURIComponent(userMessage)}`)
+      fetch('http://localhost:3001/api/historia?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema.";
+          if (Array.isArray(data) && data.length > 0) {
+            botResponse = data.map(item => item.respuesta).join(' ');
+          } else {
+            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
+          }
           addBotMessage(botResponse);
         })
         .catch(err => {
@@ -73,10 +83,14 @@ sendButton.addEventListener('click', function() {
         });
 
     } else if (userMessage.toLowerCase().includes("funcionamiento de la app")) {
-      fetch(`http://localhost:3001/api/funcionamientoApp?pregunta=${encodeURIComponent(userMessage)}`)
+      fetch('http://localhost:3001/api/funcionamientoApp?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema.";
+          if (Array.isArray(data) && data.length > 0) {
+            botResponse = data.map(item => item.respuesta).join(' '); // Concatenamos las respuestas
+          } else {
+            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
+          }
           addBotMessage(botResponse);
         })
         .catch(err => {
@@ -98,3 +112,29 @@ sendButton.addEventListener('click', function() {
 function clearChat() {
   chatBoxBody.innerHTML = '';
 }
+
+historyButton.addEventListener('click', function() {
+  historyContainer.style.display = 'block';  
+  historyButton.style.display = 'none'; 
+  hideHistoryButton.style.display = 'inline';  
+  clearHistoryButton.style.display = 'inline'; 
+
+
+  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>"; 
+
+  history.forEach(item => {
+    historyContainer.innerHTML += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
+  });
+});
+
+hideHistoryButton.addEventListener('click', function() {
+  historyContainer.style.display = 'none';  
+  hideHistoryButton.style.display = 'none'; 
+  historyButton.style.display = 'inline';  
+  clearHistoryButton.style.display = 'none'; 
+});
+
+clearHistoryButton.addEventListener('click', function() {
+  history = [];  
+  historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>";  
+});
