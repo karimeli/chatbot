@@ -5,7 +5,7 @@ const historyButton = document.getElementById('history-btn');
 const hideHistoryButton = document.getElementById('hide-history-btn');
 const clearHistoryButton = document.getElementById('clear-history-btn');
 const historyContainer = document.getElementById('history-container');
-let history = []; 
+let history = [];
 
 function addUserMessage(message) {
   const userMessageElement = document.createElement('div');
@@ -49,31 +49,52 @@ sendButton.addEventListener('click', function() {
     let botResponse = "";
 
     if (userMessage.toLowerCase().includes("expresiones")) {
-      fetch('http://localhost:3001/api/expresiones')
+      fetch('http://localhost:3001/api/expresiones?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          botResponse = data.descripcion;
+          if (Array.isArray(data) && data.length > 0) {
+            botResponse = data.map(item => item.respuesta).join(' '); // Si hay varias respuestas, las juntamos
+          } else {
+            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema.";
+          }
           addBotMessage(botResponse);
         })
-        .catch(err => console.error("Error al obtener datos de Expresiones:", err));
+        .catch(err => {
+          console.error("Error al obtener datos de Expresiones:", err);
+          addBotMessage("Hubo un problema al obtener la información.");
+        });
 
     } else if (userMessage.toLowerCase().includes("historia")) {
-      fetch('http://localhost:3001/api/historia')
+      fetch('http://localhost:3001/api/historia?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          botResponse = data.descripcion;
+          if (Array.isArray(data) && data.length > 0) {
+            botResponse = data.map(item => item.respuesta).join(' '); // Si hay varias respuestas, las juntamos
+          } else {
+            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema.";
+          }
           addBotMessage(botResponse);
         })
-        .catch(err => console.error("Error al obtener datos de Historia:", err));
+        .catch(err => {
+          console.error("Error al obtener datos de Historia:", err);
+          addBotMessage("Hubo un problema al obtener la información.");
+        });
 
     } else if (userMessage.toLowerCase().includes("funcionamiento de la app")) {
-      fetch('http://localhost:3001/api/funcionamientoApp')
+      fetch('http://localhost:3001/api/funcionamientoApp?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          botResponse = data.descripcion;
+          if (Array.isArray(data) && data.length > 0) {
+            botResponse = data.map(item => item.respuesta).join(' '); // Si hay varias respuestas, las juntamos
+          } else {
+            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema.";
+          }
           addBotMessage(botResponse);
         })
-        .catch(err => console.error("Error al obtener datos de FuncionamientoApp:", err));
+        .catch(err => {
+          console.error("Error al obtener datos de FuncionamientoApp:", err);
+          addBotMessage("Hubo un problema al obtener la información.");
+        });
 
     } else {
       botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
