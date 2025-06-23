@@ -48,16 +48,16 @@ sendButton.addEventListener('click', function() {
   if (userMessage.trim().endsWith('?')) {
     let botResponse = "";
 
-   
+    // Realizar la consulta según el tipo de mensaje
     if (userMessage.toLowerCase().includes("expresiones")) {
       fetch('http://localhost:3001/api/expresiones?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-       
-          if (Array.isArray(data) && data.length > 0) {
-            botResponse = data.map(item => item.respuesta).join(' '); 
+          console.log('Datos recibidos de la API de expresiones:', data); // Log de depuración
+          if (data.respuesta) {
+            botResponse = data.respuesta;
           } else {
-            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
+            botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
           }
           addBotMessage(botResponse);
         })
@@ -70,10 +70,11 @@ sendButton.addEventListener('click', function() {
       fetch('http://localhost:3001/api/historia?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          if (Array.isArray(data) && data.length > 0) {
-            botResponse = data.map(item => item.respuesta).join(' ');
+          console.log('Datos recibidos de la API de historia:', data); // Log de depuración
+          if (data.respuesta) {
+            botResponse = data.respuesta;
           } else {
-            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
+            botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
           }
           addBotMessage(botResponse);
         })
@@ -86,10 +87,11 @@ sendButton.addEventListener('click', function() {
       fetch('http://localhost:3001/api/funcionamientoApp?pregunta=' + encodeURIComponent(userMessage))
         .then(response => response.json())
         .then(data => {
-          if (Array.isArray(data) && data.length > 0) {
-            botResponse = data.map(item => item.respuesta).join(' '); // Concatenamos las respuestas
+          console.log('Datos recibidos de la API de funcionamientoApp:', data); // Log de depuración
+          if (data.respuesta) {
+            botResponse = data.respuesta;
           } else {
-            botResponse = data.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
+            botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
           }
           addBotMessage(botResponse);
         })
@@ -118,7 +120,6 @@ historyButton.addEventListener('click', function() {
   historyButton.style.display = 'none'; 
   hideHistoryButton.style.display = 'inline';  
   clearHistoryButton.style.display = 'inline'; 
-
 
   historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>"; 
 
