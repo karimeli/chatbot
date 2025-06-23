@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 
-
+// Conexión a MongoDB
 async function connectDB() {
   try {
     await mongoose.connect('mongodb://localhost:27017/chatbot', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -17,19 +17,22 @@ async function connectDB() {
 
 connectDB();
 
-
+// Definición de los esquemas con el campo 'pregunta' y 'respuesta'
 const expresionesSchema = new mongoose.Schema({
-  descripcion: { type: String, required: true },
+  pregunta: { type: String, required: true },
+  respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
 const historiaSchema = new mongoose.Schema({
-  descripcion: { type: String, required: true },
+  pregunta: { type: String, required: true },
+  respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
 const funcionamientoAppSchema = new mongoose.Schema({
-  descripcion: { type: String, required: true },
+  pregunta: { type: String, required: true },
+  respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -40,84 +43,73 @@ const FuncionamientoApp = mongoose.model('FuncionamientoApp', funcionamientoAppS
 
 app.use(bodyParser.json());
 
-
-async function checkCollectionExists(collectionName) {
-  const collections = await mongoose.connection.db.listCollections().toArray();
-  return collections.some(coll => coll.name === collectionName);
-}
-
-
+// Obtener respuestas de expresiones según la pregunta
 app.get('/api/expresiones', async (req, res) => {
   try {
-    const collectionExists = await checkCollectionExists('expresiones');
-    if (!collectionExists) {
-      return res.status(400).json({ error: 'La colección "Expresiones" no existe en la base de datos.' });
-    }
+    const { pregunta } = req.query;  // Recibe la pregunta como parámetro en la consulta
+    console.log('Pregunta recibida en /api/expresiones:', pregunta); // Depuración: ver qué pregunta se recibe
 
-    const respuesta = await Expresiones.findOne();  
+    // Buscar la respuesta de la pregunta en la colección "Expresiones"
+    const respuesta = await Expresiones.findOne({ pregunta });
+
+    // Depuración: mostrar lo que se encuentra
+    console.log('Respuesta encontrada en base de datos:', respuesta); // Ver si la respuesta existe
+
     if (respuesta) {
-      res.json({ descripcion: respuesta.descripcion });
+      res.json({ respuesta: respuesta.respuesta }); // Devuelve la respuesta correspondiente
     } else {
-      res.json({ descripcion: 'Lo siento, no tengo información sobre este tema.' });
+      res.json({ respuesta: 'Lo siento, no tengo información sobre este tema.' }); // Respuesta cuando no se encuentra
     }
   } catch (err) {
-    res.status(500).json({ error: `Error al obtener respuesta de "Expresiones". ${err.message}` });
+    res.status(500).json({ error: `Error al obtener respuestas de "Expresiones". ${err.message}` });
   }
 });
 
+// Obtener respuestas de historia según la pregunta
 app.get('/api/historia', async (req, res) => {
   try {
-    const collectionExists = await checkCollectionExists('historia');
-    if (!collectionExists) {
-      return res.status(400).json({ error: 'La colección "Historia" no existe en la base de datos.' });
-    }
+    const { pregunta } = req.query;  // Recibe la pregunta como parámetro en la consulta
+    console.log('Pregunta recibida en /api/historia:', pregunta); // Depuración: ver qué pregunta se recibe
 
-    const respuesta = await Historia.findOne();  
+    // Buscar la respuesta de la pregunta en la colección "Historia"
+    const respuesta = await Historia.findOne({ pregunta });
+
+    // Depuración: mostrar lo que se encuentra
+    console.log('Respuesta encontrada en base de datos:', respuesta); // Ver si la respuesta existe
+
     if (respuesta) {
-      res.json({ descripcion: respuesta.descripcion });
+      res.json({ respuesta: respuesta.respuesta });
     } else {
-      res.json({ descripcion: 'Lo siento, no tengo información sobre este tema.' });
+      res.json({ respuesta: 'Lo siento, no tengo información sobre este tema.' });
     }
   } catch (err) {
-    res.status(500).json({ error: `Error al obtener respuesta de "Historia". ${err.message}` });
+    res.status(500).json({ error: `Error al obtener respuestas de "Historia". ${err.message}` });
   }
 });
 
-// Obtener respuesta de "FuncionamientoApp"
+// Obtener respuestas de funcionamiento de la app según la pregunta
 app.get('/api/funcionamientoApp', async (req, res) => {
   try {
-    const collectionExists = await checkCollectionExists('funcionamientoApp');
-    if (!collectionExists) {
-      return res.status(400).json({ error: 'La colección "FuncionamientoApp" no existe en la base de datos.' });
-    }
+    const { pregunta } = req.query;  // Recibe la pregunta como parámetro en la consulta
+    console.log('Pregunta recibida en /api/funcionamientoApp:', pregunta); // Depuración: ver qué pregunta se recibe
 
-    const respuesta = await FuncionamientoApp.findOne(); 
+    // Buscar la respuesta de la pregunta en la colección "FuncionamientoApp"
+    const respuesta = await FuncionamientoApp.findOne({ pregunta });
+
+    // Depuración: mostrar lo que se encuentra
+    console.log('Respuesta encontrada en base de datos:', respuesta); // Ver si la respuesta existe
+
     if (respuesta) {
-      res.json({ descripcion: respuesta.descripcion });
+      res.json({ respuesta: respuesta.respuesta });
     } else {
-      res.json({ descripcion: 'Lo siento, no tengo información sobre este tema.' });
+      res.json({ respuesta: 'Lo siento, no tengo información sobre este tema.' });
     }
   } catch (err) {
-    res.status(500).json({ error: `Error al obtener respuesta de "FuncionamientoApp". ${err.message}` });
+    res.status(500).json({ error: `Error al obtener respuestas de "FuncionamientoApp". ${err.message}` });
   }
 });
 
-app.post('/api/expresiones', async (req, res) => {
-  try {
-    const collectionExists = await checkCollectionExists('expresiones');
-    if (!collectionExists) {
-      return res.status(400).json({ error: 'La colección "Expresiones" no existe en la base de datos.' });
-    }
-
-    const { descripcion } = req.body;
-    const nuevaExpresion = new Expresiones({ descripcion });
-    await nuevaExpresion.save();
-    res.status(201).json({ message: 'Expresión agregada correctamente' });
-  } catch (err) {
-    res.status(500).json({ error: 'Error al agregar la expresión' });
-  }
-});
-
+// Ruta principal
 app.get('/', (req, res) => {
   res.send('¡Hola! El servidor está funcionando.');
 });
