@@ -9,6 +9,7 @@ const port = 3001;
 async function connectDB() {
   try {
     await mongoose.connect('mongodb://localhost:27017/chatbot');
+     await mongoose.connection.db.admin().ping();
     console.log('Conectado a MongoDB');
   } catch (err) {
     console.log('Error de conexión a MongoDB', err);
