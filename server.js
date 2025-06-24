@@ -17,18 +17,24 @@ async function connectDB() {
 
 connectDB();
 
-// Esquemas para otras categorías
+// Esquemas para otras categorías, ahora asociadas a colecciones existentes
 const Historia = mongoose.model('Historia', new mongoose.Schema({
   pregunta: { type: String, required: true },
   respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
-}).index({ pregunta: 'text' }));
+}).index({ pregunta: 1 }), 'historia'); // Nombre de la colección ya existente
 
 const FuncionamientoApp = mongoose.model('FuncionamientoApp', new mongoose.Schema({
   pregunta: { type: String, required: true },
   respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
-}).index({ pregunta: 'text' }));
+}).index({ pregunta: 1 }), 'funcionamientoApp'); // Nombre de la colección ya existente
+
+const Expresiones = mongoose.model('Expresiones', new mongoose.Schema({
+  pregunta: { type: String, required: true },
+  respuesta: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+}).index({ pregunta: 1 }), 'expresiones'); // Nombre de la colección ya existente
 
 app.use(bodyParser.json());
 
@@ -37,14 +43,12 @@ const getResponse = async (modelo, pregunta) => {
   try {
     console.log('Realizando búsqueda con la pregunta:', pregunta); // Depuración
     
-    // Usamos .find() para encontrar todas las coincidencias
-    const respuestas = await modelo.find({
-      $text: { $search: pregunta }
-    });
+    // Usamos .findOne() con el índice para encontrar la respuesta
+    const respuesta = await modelo.findOne({ pregunta: pregunta });
 
-    // Si encontramos respuestas, las devolvemos; de lo contrario, un mensaje de no encontrado.
-    if (respuestas.length > 0) {
-      return respuestas.map(res => res.respuesta).join(' ');
+    // Si encontramos una respuesta, la devolvemos; de lo contrario, un mensaje de no encontrado.
+    if (respuesta) {
+      return respuesta.respuesta;
     } else {
       return 'Lo siento, no tengo información sobre este tema.';
     }
@@ -53,6 +57,15 @@ const getResponse = async (modelo, pregunta) => {
     return `Error al obtener datos. ${err.message}`;
   }
 };
+
+// Ruta para "expresiones"
+app.get('/api/expresiones', async (req, res) => {
+  const { pregunta } = req.query;
+  console.log('Pregunta recibida en /api/expresiones:', pregunta); // Depuración
+
+  const respuesta = await getResponse(Expresiones, pregunta);
+  res.json({ respuesta });
+});
 
 // Ruta para "historia"
 app.get('/api/historia', async (req, res) => {
