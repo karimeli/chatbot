@@ -52,23 +52,14 @@ sendButton.addEventListener('click', function() {
 
     // Verificar si la pregunta tiene alguna de las categorías relevantes
     if (userInput.toLowerCase().includes("expresiones")) {
-      // Buscar la pregunta relacionada en la base de datos para encontrar el _id
+      // Buscar la pregunta relacionada en la base de datos usando índice de texto
       fetch(`http://localhost:3001/expresiones?pregunta=${encodeURIComponent(userInput)}`)
         .then(response => response.json())
         .then(data => {
           console.log('Datos recibidos de la API de expresiones:', data); // Log de depuración
-          if (data._id) {
-            // Si encontramos un _id, lo usamos para obtener la respuesta
-            fetch(`http://localhost:3001/expresiones?id=${encodeURIComponent(data._id)}`)
-              .then(response => response.json())
-              .then(res => {
-                botResponse = res.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
-                addBotMessage(botResponse);
-              })
-              .catch(err => {
-                console.error("Error al obtener datos de Expresiones por ID:", err);
-                addBotMessage("Hubo un problema al obtener la información.");
-              });
+          if (data.respuesta) {
+            botResponse = data.respuesta;
+            addBotMessage(botResponse);
           } else {
             botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
             addBotMessage(botResponse);
@@ -80,23 +71,14 @@ sendButton.addEventListener('click', function() {
         });
 
     } else if (userInput.toLowerCase().includes("historia")) {
-      // Buscar la pregunta relacionada en la base de datos para encontrar el _id
+      // Buscar la pregunta relacionada en la base de datos usando índice de texto
       fetch(`http://localhost:3001/historia?pregunta=${encodeURIComponent(userInput)}`)
         .then(response => response.json())
         .then(data => {
           console.log('Datos recibidos de la API de historia:', data); // Log de depuración
-          if (data._id) {
-            // Si encontramos un _id, lo usamos para obtener la respuesta
-            fetch(`http://localhost:3001/historia?id=${encodeURIComponent(data._id)}`)
-              .then(response => response.json())
-              .then(res => {
-                botResponse = res.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
-                addBotMessage(botResponse);
-              })
-              .catch(err => {
-                console.error("Error al obtener datos de Historia por ID:", err);
-                addBotMessage("Hubo un problema al obtener la información.");
-              });
+          if (data.respuesta) {
+            botResponse = data.respuesta;
+            addBotMessage(botResponse);
           } else {
             botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
             addBotMessage(botResponse);
@@ -108,23 +90,14 @@ sendButton.addEventListener('click', function() {
         });
 
     } else if (userInput.toLowerCase().includes("funcionamiento de la app")) {
-      // Buscar la pregunta relacionada en la base de datos para encontrar el _id
+      // Buscar la pregunta relacionada en la base de datos usando índice de texto
       fetch(`http://localhost:3001/funcionamientoApp?pregunta=${encodeURIComponent(userInput)}`)
         .then(response => response.json())
         .then(data => {
           console.log('Datos recibidos de la API de funcionamientoApp:', data); // Log de depuración
-          if (data._id) {
-            // Si encontramos un _id, lo usamos para obtener la respuesta
-            fetch(`http://localhost:3001/funcionamientoApp?id=${encodeURIComponent(data._id)}`)
-              .then(response => response.json())
-              .then(res => {
-                botResponse = res.respuesta || "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
-                addBotMessage(botResponse);
-              })
-              .catch(err => {
-                console.error("Error al obtener datos de FuncionamientoApp por ID:", err);
-                addBotMessage("Hubo un problema al obtener la información.");
-              });
+          if (data.respuesta) {
+            botResponse = data.respuesta;
+            addBotMessage(botResponse);
           } else {
             botResponse = "Lo siento, no tengo información sobre ese tema. ¿Puedes hacer otra pregunta?";
             addBotMessage(botResponse);

@@ -5,10 +5,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 
-// Conectar con MongoDB
+// Conectar con MongoDB usando la URL proporcionada
 async function connectDB() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/chatbot', { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect('mongodb://localhost:27017/chatbot');
     console.log('Conectado a MongoDB');
   } catch (err) {
     console.log('Error de conexión a MongoDB', err);
@@ -17,38 +17,36 @@ async function connectDB() {
 
 connectDB();
 
-// Esquemas para otras categorías, usando las colecciones existentes
+// Esquemas para las colecciones existentes con índice de texto
 const Historia = mongoose.model('Historia', new mongoose.Schema({
   pregunta: { type: String, required: true },
   respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
-}).index({ pregunta: 1 }), 'historia'); // Nombre de la colección ya existente
+}).index({ pregunta: 'text' }), 'historia'); // Índice de texto en el campo 'pregunta'
 
 const FuncionamientoApp = mongoose.model('FuncionamientoApp', new mongoose.Schema({
   pregunta: { type: String, required: true },
   respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
-}).index({ pregunta: 1 }), 'funcionamientoApp'); // Nombre de la colección ya existente
+}).index({ pregunta: 'text' }), 'funcionamientoApp'); // Índice de texto en el campo 'pregunta'
 
 const Expresiones = mongoose.model('Expresiones', new mongoose.Schema({
   pregunta: { type: String, required: true },
   respuesta: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
-}).index({ pregunta: 1 }), 'expresiones'); // Nombre de la colección ya existente
+}).index({ pregunta: 'text' }), 'expresiones'); // Índice de texto en el campo 'pregunta'
 
 app.use(bodyParser.json());
 
-// Función para obtener respuestas por _id o por pregunta
-const getResponse = async (modelo, pregunta, id) => {
+// Función para obtener respuestas por pregunta usando índice de texto
+const getResponseFromAllCollections = async (pregunta) => {
   try {
     let respuesta;
-    if (id) {
-      // Si se pasa un _id, buscar por _id
-      respuesta = await modelo.findById(id);
-    } else {
-      // Si no se pasa un _id, buscar por pregunta
-      respuesta = await modelo.findOne({ pregunta: { $regex: new RegExp(pregunta, 'i') } });
-    }
+    
+    // Buscar en todas las colecciones usando el índice de texto en 'pregunta'
+    respuesta = await Expresiones.findOne({ $text: { $search: pregunta } }) ||
+               await Historia.findOne({ $text: { $search: pregunta } }) ||
+               await FuncionamientoApp.findOne({ $text: { $search: pregunta } });
 
     // Si encontramos una respuesta, la devolvemos; de lo contrario, un mensaje de no encontrado.
     if (respuesta) {
@@ -57,35 +55,33 @@ const getResponse = async (modelo, pregunta, id) => {
       return 'Lo siento, no tengo información sobre este tema.';
     }
   } catch (err) {
-    console.log('Error en getResponse:', err); // Depuración
+    console.log('Error en getResponseFromAllCollections:', err); // Depuración
     return `Error al obtener datos. ${err.message}`;
   }
 };
 
-// Ruta para "expresiones" por pregunta o _id
+// Ruta para buscar en todas las colecciones por pregunta
 app.get('/expresiones', async (req, res) => {
-  const { pregunta, id } = req.query;  // Se puede pasar tanto pregunta como _id
-  console.log('Pregunta o ID recibido en /expresiones:', pregunta, id); // Depuración
+  const { pregunta } = req.query;  // Solo se pasará la pregunta
+  console.log('Pregunta recibida en /expresiones:', pregunta); // Depuración
 
-  const respuesta = await getResponse(Expresiones, pregunta, id);
+  const respuesta = await getResponseFromAllCollections(pregunta);
   res.json({ respuesta });
 });
 
-// Ruta para "historia" por pregunta o _id
 app.get('/historia', async (req, res) => {
-  const { pregunta, id } = req.query;  // Se puede pasar tanto pregunta como _id
-  console.log('Pregunta o ID recibido en /historia:', pregunta, id); // Depuración
+  const { pregunta } = req.query;  // Solo se pasará la pregunta
+  console.log('Pregunta recibida en /historia:', pregunta); // Depuración
 
-  const respuesta = await getResponse(Historia, pregunta, id);
+  const respuesta = await getResponseFromAllCollections(pregunta);
   res.json({ respuesta });
 });
 
-// Ruta para "funcionamientoApp" por pregunta o _id
 app.get('/funcionamientoApp', async (req, res) => {
-  const { pregunta, id } = req.query;  // Se puede pasar tanto pregunta como _id
-  console.log('Pregunta o ID recibido en /funcionamientoApp:', pregunta, id); // Depuración
+  const { pregunta } = req.query;  // Solo se pasará la pregunta
+  console.log('Pregunta recibida en /funcionamientoApp:', pregunta); // Depuración
 
-  const respuesta = await getResponse(FuncionamientoApp, pregunta, id);
+  const respuesta = await getResponseFromAllCollections(pregunta);
   res.json({ respuesta });
 });
 
