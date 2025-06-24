@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 
+// Conectar con MongoDB
 async function connectDB() {
   try {
     await mongoose.connect('mongodb://localhost:27017/chatbot', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -30,15 +31,17 @@ app.use(bodyParser.json());
 const getResponse = async (categoria, pregunta) => {
   try {
     console.log('Realizando búsqueda en la categoría:', categoria, 'con la pregunta:', pregunta); // Depuración
-    const respuesta = await General.findOne({
+    
+    // Usamos .find() para encontrar todas las coincidencias en lugar de .findOne()
+    const respuestas = await General.find({
       $text: { $search: pregunta },
       categoria: categoria
     });
 
-    console.log('Respuesta encontrada:', respuesta); // Depuración
-
-    if (respuesta) {
-      return respuesta.respuesta;
+    // Si encontramos respuestas, las devolvemos; de lo contrario, un mensaje de no encontrado.
+    if (respuestas.length > 0) {
+      // Si hay varias respuestas, las unimos en un solo string
+      return respuestas.map(res => res.respuesta).join(' ');
     } else {
       return 'Lo siento, no tengo información sobre este tema.';
     }
@@ -48,7 +51,7 @@ const getResponse = async (categoria, pregunta) => {
   }
 };
 
-// Consulta para "expresiones"
+// Ruta para "expresiones"
 app.get('/api/expresiones', async (req, res) => {
   const { pregunta } = req.query;
   console.log('Pregunta recibida en /api/expresiones:', pregunta); // Depuración
@@ -57,7 +60,7 @@ app.get('/api/expresiones', async (req, res) => {
   res.json({ respuesta });
 });
 
-// Consulta para "historia"
+// Ruta para "historia"
 app.get('/api/historia', async (req, res) => {
   const { pregunta } = req.query;
   console.log('Pregunta recibida en /api/historia:', pregunta); // Depuración
@@ -66,7 +69,7 @@ app.get('/api/historia', async (req, res) => {
   res.json({ respuesta });
 });
 
-// Consulta para "funcionamientoApp"
+// Ruta para "funcionamientoApp"
 app.get('/api/funcionamientoApp', async (req, res) => {
   const { pregunta } = req.query;
   console.log('Pregunta recibida en /api/funcionamientoApp:', pregunta); // Depuración
@@ -80,6 +83,7 @@ app.get('/', (req, res) => {
   res.send('¡Hola! El servidor está funcionando.');
 });
 
+// Iniciar servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
