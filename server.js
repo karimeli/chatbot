@@ -17,7 +17,7 @@ async function connectDB() {
 
 connectDB();
 
-// Esquemas para otras categorías, ahora asociadas a colecciones existentes
+// Esquemas para otras categorías, usando las colecciones existentes
 const Historia = mongoose.model('Historia', new mongoose.Schema({
   pregunta: { type: String, required: true },
   respuesta: { type: String, required: true },
@@ -38,13 +38,17 @@ const Expresiones = mongoose.model('Expresiones', new mongoose.Schema({
 
 app.use(bodyParser.json());
 
-// Función para obtener respuestas
-const getResponse = async (modelo, pregunta) => {
+// Función para obtener respuestas por _id o por pregunta
+const getResponse = async (modelo, pregunta, id) => {
   try {
-    console.log('Realizando búsqueda con la pregunta:', pregunta); // Depuración
-    
-    // Usamos .findOne() con el índice para encontrar la respuesta
-    const respuesta = await modelo.findOne({ pregunta: pregunta });
+    let respuesta;
+    if (id) {
+      // Si se pasa un _id, buscar por _id
+      respuesta = await modelo.findById(id);
+    } else {
+      // Si no se pasa un _id, buscar por pregunta
+      respuesta = await modelo.findOne({ pregunta: { $regex: new RegExp(pregunta, 'i') } });
+    }
 
     // Si encontramos una respuesta, la devolvemos; de lo contrario, un mensaje de no encontrado.
     if (respuesta) {
@@ -58,30 +62,30 @@ const getResponse = async (modelo, pregunta) => {
   }
 };
 
-// Ruta para "expresiones"
-app.get('/api/expresiones', async (req, res) => {
-  const { pregunta } = req.query;
-  console.log('Pregunta recibida en /api/expresiones:', pregunta); // Depuración
+// Ruta para "expresiones" por pregunta o _id
+app.get('/expresiones', async (req, res) => {
+  const { pregunta, id } = req.query;  // Se puede pasar tanto pregunta como _id
+  console.log('Pregunta o ID recibido en /expresiones:', pregunta, id); // Depuración
 
-  const respuesta = await getResponse(Expresiones, pregunta);
+  const respuesta = await getResponse(Expresiones, pregunta, id);
   res.json({ respuesta });
 });
 
-// Ruta para "historia"
-app.get('/api/historia', async (req, res) => {
-  const { pregunta } = req.query;
-  console.log('Pregunta recibida en /api/historia:', pregunta); // Depuración
+// Ruta para "historia" por pregunta o _id
+app.get('/historia', async (req, res) => {
+  const { pregunta, id } = req.query;  // Se puede pasar tanto pregunta como _id
+  console.log('Pregunta o ID recibido en /historia:', pregunta, id); // Depuración
 
-  const respuesta = await getResponse(Historia, pregunta);
+  const respuesta = await getResponse(Historia, pregunta, id);
   res.json({ respuesta });
 });
 
-// Ruta para "funcionamientoApp"
-app.get('/api/funcionamientoApp', async (req, res) => {
-  const { pregunta } = req.query;
-  console.log('Pregunta recibida en /api/funcionamientoApp:', pregunta); // Depuración
+// Ruta para "funcionamientoApp" por pregunta o _id
+app.get('/funcionamientoApp', async (req, res) => {
+  const { pregunta, id } = req.query;  // Se puede pasar tanto pregunta como _id
+  console.log('Pregunta o ID recibido en /funcionamientoApp:', pregunta, id); // Depuración
 
-  const respuesta = await getResponse(FuncionamientoApp, pregunta);
+  const respuesta = await getResponse(FuncionamientoApp, pregunta, id);
   res.json({ respuesta });
 });
 
