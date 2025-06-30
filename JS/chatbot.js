@@ -14,18 +14,15 @@ function addUserMessage(message) {
   userMessageElement.innerHTML = `<p>${message}</p>`;
   chatBoxBody.appendChild(userMessageElement);
 
-
   history.push({ type: 'user', message: message });
   scrollToBottom();  
 }
-
 
 function addBotMessage(responseText) {
   const botMessageElement = document.createElement('div');
   botMessageElement.classList.add('message', 'bot');
   botMessageElement.innerHTML = `<p>${responseText}</p>`;
   chatBoxBody.appendChild(botMessageElement);
-
 
   history.push({ type: 'bot', message: responseText });
   scrollToBottom();  
@@ -35,23 +32,22 @@ function scrollToBottom() {
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 }
 
-
 sendButton.addEventListener('click', async function() {
   const userMessage = chatInput.value;
 
   if (userMessage.trim() === '') return;
 
-  addUserMessage(userMessage);
+  // Limpiar el chat antes de agregar el nuevo mensaje
+  chatBoxBody.innerHTML = ''; 
 
+  addUserMessage(userMessage);
 
   chatInput.value = '';
 
-  
   if (userMessage.trim().endsWith('?')) {
     let botResponse = "";
 
     try {
-    
       const response = await fetch('http://localhost:3000/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -70,10 +66,8 @@ sendButton.addEventListener('click', async function() {
     addBotMessage("Por favor, hazme una pregunta para poder ayudarte.");
   }
 
-
   chatBoxBody.scrollTop = chatBoxBody.scrollHeight;
 });
-
 
 historyButton.addEventListener('click', function() {
   historyContainer.innerHTML = "<h3>Historial de Mensajes:</h3>";  
@@ -82,13 +76,11 @@ historyButton.addEventListener('click', function() {
     historyContainer.innerHTML += `<p><strong>${item.type.toUpperCase()}:</strong> ${item.message}</p>`;
   });
 
-  
   historyContainer.style.display = 'block';  
   historyButton.style.display = 'none';  
   hideHistoryButton.style.display = 'inline'; 
   clearHistoryButton.style.display = 'inline'; 
 });
-
 
 hideHistoryButton.addEventListener('click', function() {
   historyContainer.style.display = 'none';  
@@ -96,7 +88,6 @@ hideHistoryButton.addEventListener('click', function() {
   historyButton.style.display = 'inline'; 
   clearHistoryButton.style.display = 'none'; 
 });
-
 
 clearHistoryButton.addEventListener('click', function() {
   history = [];  
