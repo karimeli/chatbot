@@ -37,7 +37,7 @@ sendButton.addEventListener('click', async function() {
 
   if (userMessage.trim() === '') return;
 
-  // Limpiar el chat antes de agregar el nuevo mensaje
+
   chatBoxBody.innerHTML = ''; 
 
   addUserMessage(userMessage);
